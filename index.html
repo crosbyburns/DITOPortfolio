@@ -246,7 +246,7 @@
     .col-description { width: 260px; }
     .col-funding { width: 185px; }
 
-    input[type="text"], textarea {
+    input[type="text"], textarea, select {
       width: 100%;
       border: 1px solid #bfcdd6;
       border-radius: 8px;
@@ -264,7 +264,7 @@
       line-height: 1.4;
     }
 
-    input[type="text"]:focus, textarea:focus {
+    input[type="text"]:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--marin-blue);
       box-shadow: 0 0 0 3px rgba(36, 107, 143, 0.14);
@@ -393,7 +393,7 @@
       .drag-handle { display: none; }
       .col-drag { display: none; }
       .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      input[type="text"], textarea { border: 0; padding: 0; box-shadow: none; resize: none; }
+      input[type="text"], textarea, select { border: 0; padding: 0; box-shadow: none; resize: none; }
       .status-buttons { display: none; }
     }
   </style>
@@ -563,7 +563,12 @@
             <textarea data-field="description" aria-label="Description" placeholder="Describe the requested investment">${escapeHTML(item.description)}</textarea>
           </td>
           <td>
-            <input type="text" data-field="fundingSource" value="${escapeHTML(item.fundingSource)}" aria-label="Funding Source" placeholder="General Fund / TIB / grant / other" />
+            <select data-field="fundingSource" aria-label="Funding Source">
+              <option value="" ${!item.fundingSource ? "selected" : ""}>Select…</option>
+              <option value="TIB" ${item.fundingSource === "TIB" ? "selected" : ""}>TIB</option>
+              <option value="Non-Departmental" ${item.fundingSource === "Non-Departmental" ? "selected" : ""}>Non-Departmental</option>
+              <option value="CHB Budget" ${item.fundingSource === "CHB Budget" ? "selected" : ""}>CHB Budget</option>
+            </select>
           </td>
         </tr>
       `).join("");
