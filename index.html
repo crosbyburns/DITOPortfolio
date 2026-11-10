@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>County of Marin | Portfolio Review</title>
+  <title>County of Marin | DITO Portfolio Review</title>
   <style>
     :root {
       --marin-navy: #173b57;
@@ -110,39 +110,6 @@
       max-width: 920px;
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(110px, 1fr));
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .summary-card {
-      border: 1px solid var(--marin-border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      background: var(--marin-light);
-    }
-
-    .summary-label {
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 800;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-    }
-
-    .summary-value {
-      margin-top: 3px;
-      color: var(--marin-navy);
-      font-size: 1.35rem;
-      font-weight: 800;
-    }
-
-    .summary-card.green { background: var(--green-light); border-color: #b9dfc5; }
-    .summary-card.yellow { background: var(--yellow-light); border-color: #ead889; }
-    .summary-card.red { background: var(--red-light); border-color: #efc1bd; }
-
     .toolbar {
       display: flex;
       align-items: center;
@@ -206,7 +173,7 @@
 
     table {
       width: 100%;
-      min-width: 1460px;
+      min-width: 1740px;
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
@@ -259,8 +226,9 @@
     .col-scope { width: 250px; }
     .col-status { width: 145px; text-align: center; }
     .col-assessment { width: 380px; }
-    .col-check { width: 120px; text-align: center; }
     .col-request { width: 180px; }
+    .col-description { width: 260px; }
+    .col-funding { width: 185px; }
 
     input[type="text"], textarea {
       width: 100%;
@@ -344,20 +312,6 @@
     .status-yellow .status-name { color: var(--yellow); }
     .status-green .status-name { color: var(--green); }
 
-    .checkbox-wrap {
-      min-height: 86px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .portfolio-check {
-      width: 23px;
-      height: 23px;
-      accent-color: var(--marin-teal);
-      cursor: pointer;
-    }
-
     .empty-state-note {
       color: var(--muted);
       font-size: 0.85rem;
@@ -373,7 +327,6 @@
     }
 
     @media (max-width: 920px) {
-      .summary-grid { grid-template-columns: repeat(3, minmax(110px, 1fr)); }
       .header-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
       .header-subtitle { text-align: left; white-space: normal; }
     }
@@ -382,7 +335,6 @@
       header { padding: 18px 16px; }
       main { padding: 20px 12px 40px; }
       .intro-card { padding: 20px 18px; border-radius: 10px; }
-      .summary-grid { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
       .toolbar { align-items: stretch; }
       .toolbar-left, .toolbar-right { width: 100%; }
       .btn { flex: 1; }
@@ -401,7 +353,6 @@
       .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       input[type="text"], textarea { border: 0; padding: 0; box-shadow: none; resize: none; }
       .status-buttons { display: none; }
-      .portfolio-check { accent-color: var(--marin-teal); }
     }
   </style>
 </head>
@@ -411,7 +362,7 @@
       <div class="header-inner">
         <div>
           <div class="brand-kicker">County of Marin</div>
-          <h1>Portfolio Review</h1>
+          <h1>DITO Portfolio Review</h1>
         </div>
         <div class="header-subtitle">Digital, Innovation &amp; Transformation Office</div>
       </div>
@@ -423,14 +374,6 @@
         <h2 id="pageTitle">Investment &amp; Resource Review</h2>
         <p class="intro">Use this page to review the current portfolio, assess performance, and identify where to continue, change, or stop investment.</p>
 
-        <div class="summary-grid" aria-label="Portfolio summary">
-          <div class="summary-card"><div class="summary-label">Resources</div><div class="summary-value" id="resourceCount">0</div></div>
-          <div class="summary-card"><div class="summary-label">Current</div><div class="summary-value" id="currentCount">0</div></div>
-          <div class="summary-card"><div class="summary-label">Future</div><div class="summary-value" id="futureCount">0</div></div>
-          <div class="summary-card green"><div class="summary-label">Green</div><div class="summary-value" id="greenCount">0</div></div>
-          <div class="summary-card yellow"><div class="summary-label">Yellow</div><div class="summary-value" id="yellowCount">0</div></div>
-          <div class="summary-card red"><div class="summary-label">Red</div><div class="summary-value" id="redCount">0</div></div>
-        </div>
       </section>
 
       <div class="toolbar">
@@ -455,9 +398,9 @@
                 <th class="col-scope">Scope</th>
                 <th class="col-status">R / Y / G</th>
                 <th class="col-assessment">Assessment</th>
-                <th class="col-check">Current investment?</th>
-                <th class="col-check">Future investment?</th>
                 <th class="col-request">Investment request</th>
+                <th class="col-description">Description</th>
+                <th class="col-funding">Funding Source?</th>
               </tr>
             </thead>
             <tbody id="portfolioBody"></tbody>
@@ -481,9 +424,9 @@
         scope: "Community engagement platform",
         status: "green",
         assessment: "Strong progress; moving into broader adoption…",
-        current: true,
-        future: true,
-        request: "$XXK"
+        request: "$XXK",
+        description: "",
+        fundingSource: ""
       },
       {
         id: "simpligov",
@@ -492,9 +435,9 @@
         scope: "Workflow automation",
         status: "yellow",
         assessment: "Benefits remain compelling, but implementation…",
-        current: true,
-        future: false,
-        request: "—"
+        request: "—",
+        description: "",
+        fundingSource: ""
       },
       {
         id: "example-project",
@@ -503,9 +446,9 @@
         scope: "Short scope statement",
         status: "red",
         assessment: "Recommend stopping / redirecting investment…",
-        current: true,
-        future: false,
-        request: "$0"
+        request: "$0",
+        description: "",
+        fundingSource: ""
       }
     ];
 
@@ -567,31 +510,17 @@
             <textarea data-field="assessment" aria-label="Assessment" placeholder="Assessment, value, issues, or recommendation">${escapeHTML(item.assessment)}</textarea>
           </td>
           <td>
-            <div class="checkbox-wrap">
-              <input class="portfolio-check" type="checkbox" data-field="current" aria-label="Current investment" ${item.current ? "checked" : ""} />
-            </div>
-          </td>
-          <td>
-            <div class="checkbox-wrap">
-              <input class="portfolio-check" type="checkbox" data-field="future" aria-label="Future investment" ${item.future ? "checked" : ""} />
-            </div>
-          </td>
-          <td>
             <input type="text" data-field="request" value="${escapeHTML(item.request)}" aria-label="Investment request" placeholder="$100K / +1 FTE / No change" />
+          </td>
+          <td>
+            <textarea data-field="description" aria-label="Description" placeholder="Describe the requested investment">${escapeHTML(item.description)}</textarea>
+          </td>
+          <td>
+            <input type="text" data-field="fundingSource" value="${escapeHTML(item.fundingSource)}" aria-label="Funding Source" placeholder="General Fund / TIB / grant / other" />
           </td>
         </tr>
       `).join("");
 
-      updateSummary();
-    }
-
-    function updateSummary() {
-      document.getElementById("resourceCount").textContent = portfolio.filter(x => (x.resource || "").trim()).length;
-      document.getElementById("currentCount").textContent = portfolio.filter(x => x.current).length;
-      document.getElementById("futureCount").textContent = portfolio.filter(x => x.future).length;
-      document.getElementById("greenCount").textContent = portfolio.filter(x => x.status === "green").length;
-      document.getElementById("yellowCount").textContent = portfolio.filter(x => x.status === "yellow").length;
-      document.getElementById("redCount").textContent = portfolio.filter(x => x.status === "red").length;
     }
 
     function queueSave() {
@@ -610,8 +539,7 @@
       const index = Number(row.dataset.index);
       const field = target.dataset.field;
       if (!field || !portfolio[index]) return;
-      portfolio[index][field] = target.type === "checkbox" ? target.checked : target.value;
-      updateSummary();
+      portfolio[index][field] = target.value;
       queueSave();
     }
 
@@ -636,9 +564,9 @@
         scope: "",
         status: "",
         assessment: "",
-        current: false,
-        future: false,
-        request: ""
+        request: "",
+        description: "",
+        fundingSource: ""
       });
       render();
       queueSave();
@@ -660,9 +588,9 @@
         "Scope",
         "R/Y/G",
         "Assessment",
-        "Current investment?",
-        "Future investment?",
-        "Investment request"
+        "Investment request",
+        "Description",
+        "Funding Source?"
       ];
 
       const rows = portfolio.map(item => [
@@ -671,9 +599,9 @@
         item.scope,
         statusLabel(item.status),
         item.assessment,
-        item.current ? "Yes" : "No",
-        item.future ? "Yes" : "No",
-        item.request
+        item.request,
+        item.description,
+        item.fundingSource
       ]);
 
       const csv = [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
@@ -692,9 +620,6 @@
       if (event.target.matches("[data-field]")) updateField(event.target);
     });
 
-    document.getElementById("portfolioBody").addEventListener("change", event => {
-      if (event.target.matches("input[type='checkbox'][data-field]")) updateField(event.target);
-    });
 
     document.getElementById("portfolioBody").addEventListener("click", event => {
       const button = event.target.closest(".status-btn");
