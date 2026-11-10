@@ -173,7 +173,7 @@
 
     table {
       width: 100%;
-      min-width: 1740px;
+      min-width: 1790px;
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
@@ -198,6 +198,12 @@
     thead th:first-child {
       position: sticky;
       left: 0;
+      z-index: 7;
+    }
+
+    thead th:nth-child(2) {
+      position: sticky;
+      left: 46px;
       z-index: 6;
     }
 
@@ -216,11 +222,21 @@
     tbody td:first-child {
       position: sticky;
       left: 0;
+      z-index: 3;
+      background: #f4f8fb;
+      text-align: center;
+      padding: 0;
+    }
+
+    tbody td:nth-child(2) {
+      position: sticky;
+      left: 46px;
       z-index: 2;
       background: #fbfdfe;
       box-shadow: 5px 0 10px rgba(23, 59, 87, 0.04);
     }
 
+    .col-drag { width: 46px; text-align: center; padding-left: 0; padding-right: 0; }
     .col-resource { width: 190px; }
     .col-investment { width: 145px; }
     .col-scope { width: 250px; }
@@ -255,6 +271,30 @@
     }
 
     .resource-input { font-weight: 750; color: var(--marin-navy); }
+
+    .drag-handle {
+      width: 100%;
+      min-height: 105px;
+      border: 0;
+      background: transparent;
+      color: #7d8f9b;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 1.25rem;
+      line-height: 1;
+      letter-spacing: -0.12em;
+      user-select: none;
+    }
+
+    .drag-handle:hover { color: var(--marin-blue); background: #eaf2f6; }
+    .drag-handle:active { cursor: grabbing; }
+    .drag-handle:focus-visible { outline: 3px solid rgba(36, 107, 143, 0.24); outline-offset: -3px; }
+
+    tbody tr.dragging td { opacity: 0.5; }
+    tbody tr.drag-over td { border-top: 3px solid var(--marin-teal); }
 
     .status-cell {
       padding: 0;
@@ -349,7 +389,9 @@
       .table-scroll { overflow: visible; }
       table { min-width: 0; font-size: 9px; }
       thead th { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      tbody td:first-child { position: static; box-shadow: none; }
+      tbody td:first-child, tbody td:nth-child(2) { position: static; box-shadow: none; }
+      .drag-handle { display: none; }
+      .col-drag { display: none; }
       .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       input[type="text"], textarea { border: 0; padding: 0; box-shadow: none; resize: none; }
       .status-buttons { display: none; }
@@ -393,6 +435,7 @@
           <table>
             <thead>
               <tr>
+                <th class="col-drag" aria-label="Reorder"></th>
                 <th class="col-resource">Project</th>
                 <th class="col-investment">Investment</th>
                 <th class="col-scope">Scope</th>
@@ -408,7 +451,7 @@
         </div>
       </section>
 
-      <div class="empty-state-note">Tip: click R, Y, or G to change the heatmap status. All edits save automatically in this browser.</div>
+      <div class="empty-state-note">Tip: drag the dots at the left of a row to reorder projects. Click R, Y, or G to change status. All edits save automatically in this browser.</div>
       <div class="footer-note">Static portfolio review tool · Data is stored only in your browser unless you download the CSV.</div>
     </main>
   </div>
@@ -454,6 +497,7 @@
 
     let portfolio = loadPortfolio();
     let saveTimer;
+    let draggedIndex = null;
 
     function cloneSample() {
       return JSON.parse(JSON.stringify(SAMPLE_DATA));
@@ -486,7 +530,10 @@
     function render() {
       const body = document.getElementById("portfolioBody");
       body.innerHTML = portfolio.map((item, index) => `
-        <tr data-index="${index}">
+        <tr data-index="${index}" draggable="false">
+          <td class="drag-cell">
+            <button class="drag-handle" type="button" draggable="true" aria-label="Drag to reorder ${escapeHTML(item.resource || `project ${index + 1}`)}" title="Drag to reorder">⠿</button>
+          </td>
           <td>
             <input class="resource-input" type="text" data-field="resource" value="${escapeHTML(item.resource)}" aria-label="Project" placeholder="Project name" />
           </td>
@@ -552,6 +599,40 @@
 
       // Clicking the active status again clears it.
       portfolio[index].status = portfolio[index].status === status ? "" : status;
+      render();
+      queueSave();
+    }
+
+    function clearDragStyles() {
+      document.querySelectorAll("#portfolioBody tr").forEach(row => {
+        row.classList.remove("dragging", "drag-over");
+      });
+    }
+
+    function startDrag(handle) {
+      const row = handle.closest("tr[data-index]");
+      if (!row) return;
+      draggedIndex = Number(row.dataset.index);
+      row.classList.add("dragging");
+    }
+
+    function finishDrag(targetRow) {
+      if (draggedIndex === null || !targetRow) {
+        draggedIndex = null;
+        clearDragStyles();
+        return;
+      }
+
+      let targetIndex = Number(targetRow.dataset.index);
+      if (!Number.isInteger(targetIndex) || targetIndex === draggedIndex) {
+        draggedIndex = null;
+        clearDragStyles();
+        return;
+      }
+
+      const [moved] = portfolio.splice(draggedIndex, 1);
+      portfolio.splice(targetIndex, 0, moved);
+      draggedIndex = null;
       render();
       queueSave();
     }
@@ -624,6 +705,37 @@
     document.getElementById("portfolioBody").addEventListener("click", event => {
       const button = event.target.closest(".status-btn");
       if (button) setStatus(button);
+    });
+
+    document.getElementById("portfolioBody").addEventListener("dragstart", event => {
+      const handle = event.target.closest(".drag-handle");
+      if (!handle) return;
+      startDrag(handle);
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", String(draggedIndex));
+    });
+
+    document.getElementById("portfolioBody").addEventListener("dragover", event => {
+      if (draggedIndex === null) return;
+      const row = event.target.closest("tr[data-index]");
+      if (!row || Number(row.dataset.index) === draggedIndex) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      document.querySelectorAll("#portfolioBody tr.drag-over").forEach(r => r.classList.remove("drag-over"));
+      row.classList.add("drag-over");
+    });
+
+    document.getElementById("portfolioBody").addEventListener("drop", event => {
+      if (draggedIndex === null) return;
+      const row = event.target.closest("tr[data-index]");
+      if (!row) return;
+      event.preventDefault();
+      finishDrag(row);
+    });
+
+    document.getElementById("portfolioBody").addEventListener("dragend", () => {
+      draggedIndex = null;
+      clearDragStyles();
     });
 
     document.getElementById("addRowBtn").addEventListener("click", addRow);
