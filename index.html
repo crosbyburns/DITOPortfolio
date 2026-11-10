@@ -371,14 +371,14 @@
     <main>
       <section class="intro-card" aria-labelledby="pageTitle">
         <div class="section-kicker">Portfolio Overview</div>
-        <h2 id="pageTitle">Investment &amp; Resource Review</h2>
+        <h2 id="pageTitle">Investment &amp; Project Review</h2>
         <p class="intro">Use this page to review the current portfolio, assess performance, and identify where to continue, change, or stop investment.</p>
 
       </section>
 
       <div class="toolbar">
         <div class="toolbar-left">
-          <button class="btn btn-primary" id="addRowBtn" type="button">+ Add resource</button>
+          <button class="btn btn-primary" id="addRowBtn" type="button">+ Add project</button>
           <button class="btn" id="exportBtn" type="button">Download CSV</button>
           <button class="btn" id="printBtn" type="button">Print / PDF</button>
         </div>
@@ -393,12 +393,12 @@
           <table>
             <thead>
               <tr>
-                <th class="col-resource">Resource</th>
+                <th class="col-resource">Project</th>
                 <th class="col-investment">Investment</th>
                 <th class="col-scope">Scope</th>
                 <th class="col-status">R / Y / G</th>
                 <th class="col-assessment">Assessment</th>
-                <th class="col-request">Investment request</th>
+                <th class="col-request">H1/27 $ Request</th>
                 <th class="col-description">Description</th>
                 <th class="col-funding">Funding Source?</th>
               </tr>
@@ -488,7 +488,7 @@
       body.innerHTML = portfolio.map((item, index) => `
         <tr data-index="${index}">
           <td>
-            <input class="resource-input" type="text" data-field="resource" value="${escapeHTML(item.resource)}" aria-label="Resource" placeholder="Resource name" />
+            <input class="resource-input" type="text" data-field="resource" value="${escapeHTML(item.resource)}" aria-label="Project" placeholder="Project name" />
           </td>
           <td>
             <input type="text" data-field="investment" value="${escapeHTML(item.investment)}" aria-label="Investment" placeholder="$150K / 1.0 FTE" />
@@ -510,7 +510,7 @@
             <textarea data-field="assessment" aria-label="Assessment" placeholder="Assessment, value, issues, or recommendation">${escapeHTML(item.assessment)}</textarea>
           </td>
           <td>
-            <input type="text" data-field="request" value="${escapeHTML(item.request)}" aria-label="Investment request" placeholder="$100K / +1 FTE / No change" />
+            <input type="text" data-field="request" value="${escapeHTML(item.request)}" aria-label="H1/27 $ Request" placeholder="$100K / +1 FTE / No change" />
           </td>
           <td>
             <textarea data-field="description" aria-label="Description" placeholder="Describe the requested investment">${escapeHTML(item.description)}</textarea>
@@ -583,12 +583,12 @@
 
     function exportCSV() {
       const headers = [
-        "Resource",
+        "Project",
         "Investment",
         "Scope",
         "R/Y/G",
         "Assessment",
-        "Investment request",
+        "H1/27 $ Request",
         "Description",
         "Funding Source?"
       ];
