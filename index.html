@@ -281,7 +281,8 @@
 
     textarea {
       min-height: 78px;
-      resize: vertical;
+      resize: none;
+      overflow: hidden;
       line-height: 1.4;
     }
 
@@ -295,7 +296,8 @@
       font-weight: 750;
       color: var(--marin-navy);
       min-height: 78px;
-      resize: vertical;
+      resize: none;
+      overflow: hidden;
       line-height: 1.4;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
@@ -1066,6 +1068,16 @@
       });
     }
 
+    function autoSizeTextarea(textarea) {
+      if (!textarea) return;
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.max(textarea.scrollHeight, 78)}px`;
+    }
+
+    function autoSizeAllTextareas() {
+      document.querySelectorAll("#portfolioBody textarea").forEach(autoSizeTextarea);
+    }
+
     function render() {
       const body = document.getElementById("portfolioBody");
       body.innerHTML = portfolio.map((item, index) => `
@@ -1116,6 +1128,7 @@
 
       updateSortIndicators();
       renderAnalytics();
+      requestAnimationFrame(autoSizeAllTextareas);
     }
 
     function queueSave() {
@@ -1253,7 +1266,14 @@
     });
 
     document.getElementById("portfolioBody").addEventListener("input", event => {
+      if (event.target.matches("textarea[data-field]")) autoSizeTextarea(event.target);
       if (event.target.matches("[data-field]")) updateField(event.target);
+    });
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(autoSizeAllTextareas, 100);
     });
 
 
