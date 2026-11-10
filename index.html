@@ -204,6 +204,37 @@
       z-index: 4;
     }
 
+    .sort-button {
+      width: 100%;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4px;
+      line-height: inherit;
+    }
+
+    .sort-button:hover .sort-label { text-decoration: underline; text-underline-offset: 2px; }
+    .sort-button:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; }
+    .sort-indicator {
+      flex: 0 0 auto;
+      font-size: 0.72rem;
+      opacity: 0.62;
+      line-height: 1;
+      padding-bottom: 1px;
+    }
+    .sort-button.active .sort-indicator { opacity: 1; }
+
     tbody td {
       border-right: 1px solid var(--marin-border);
       border-bottom: 1px solid var(--marin-border);
@@ -296,23 +327,24 @@
 
     .status-cell {
       padding: 0;
-      vertical-align: stretch;
+      vertical-align: middle;
+      transition: background 0.15s ease;
     }
+
+    .status-cell.status-red { background: var(--red-light); }
+    .status-cell.status-yellow { background: var(--yellow-light); }
+    .status-cell.status-green { background: var(--green-light); }
 
     .status-box {
       min-height: 94px;
-      height: 100%;
+      width: 100%;
       padding: 8px 6px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 8px;
-      transition: background 0.15s ease;
+      background: transparent;
     }
-
-    .status-box.status-red { background: var(--red-light); }
-    .status-box.status-yellow { background: var(--yellow-light); }
-    .status-box.status-green { background: var(--green-light); }
 
     .status-buttons {
       display: grid;
@@ -438,14 +470,14 @@
             <thead>
               <tr>
                 <th class="col-drag" aria-label="Reorder"></th>
-                <th class="col-resource">Project</th>
-                <th class="col-investment">Investment</th>
-                <th class="col-scope">Scope</th>
-                <th class="col-status">R / Y / G</th>
-                <th class="col-assessment">Assessment</th>
-                <th class="col-request">H1/27 $ Request</th>
-                <th class="col-description">Description</th>
-                <th class="col-funding">Funding Source?</th>
+                <th class="col-resource"><button class="sort-button" type="button" data-sort-field="resource" aria-label="Sort by Project"><span class="sort-label">Project</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-investment"><button class="sort-button" type="button" data-sort-field="investment" data-sort-type="money" aria-label="Sort by Investment"><span class="sort-label">Investment</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-scope"><button class="sort-button" type="button" data-sort-field="scope" aria-label="Sort by Scope"><span class="sort-label">Scope</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-status"><button class="sort-button" type="button" data-sort-field="status" data-sort-type="status" aria-label="Sort by R Y G status"><span class="sort-label">R / Y / G</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-assessment"><button class="sort-button" type="button" data-sort-field="assessment" aria-label="Sort by Assessment"><span class="sort-label">Assessment</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-request"><button class="sort-button" type="button" data-sort-field="request" data-sort-type="money" aria-label="Sort by H1 27 dollar request"><span class="sort-label">H1/27 $ Request</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-description"><button class="sort-button" type="button" data-sort-field="description" aria-label="Sort by Description"><span class="sort-label">Description</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-funding"><button class="sort-button" type="button" data-sort-field="fundingSource" aria-label="Sort by Funding Source"><span class="sort-label">Funding Source?</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
               </tr>
             </thead>
             <tbody id="portfolioBody"></tbody>
@@ -453,7 +485,7 @@
         </div>
       </section>
 
-      <div class="empty-state-note">Tip: drag the dots at the left of a row to reorder projects. Click R, Y, or G to change status. All edits save automatically in this browser.</div>
+      <div class="empty-state-note">Tip: click any column header to sort; click again to reverse the order. Drag the dots at the left of a row for a custom order. All edits save automatically in this browser.</div>
       <div class="footer-note">Static portfolio review tool · Data is stored only in your browser unless you download the CSV.</div>
     </main>
   </div>
@@ -500,6 +532,7 @@
     let portfolio = loadPortfolio();
     let saveTimer;
     let draggedIndex = null;
+    let currentSort = { field: null, direction: "asc" };
 
     function cloneSample() {
       return JSON.parse(JSON.stringify(SAMPLE_DATA));
@@ -529,6 +562,79 @@
       return status === "red" ? "Red" : status === "yellow" ? "Yellow" : status === "green" ? "Green" : "Not rated";
     }
 
+    function isBlank(value) {
+      return value === null || value === undefined || String(value).trim() === "" || String(value).trim() === "—";
+    }
+
+    function moneyValue(value) {
+      if (isBlank(value)) return null;
+      const text = String(value).replaceAll(",", "");
+      const match = text.match(/-?\$?\s*(\d+(?:\.\d+)?)\s*([kKmM]?)/);
+      if (!match) return null;
+      let amount = Number(match[1]);
+      if (!Number.isFinite(amount)) return null;
+      const suffix = match[2].toLowerCase();
+      if (suffix === "k") amount *= 1000;
+      if (suffix === "m") amount *= 1000000;
+      return amount;
+    }
+
+    function compareValues(a, b, field, type, direction) {
+      const aRaw = a[field];
+      const bRaw = b[field];
+      const aBlank = isBlank(aRaw);
+      const bBlank = isBlank(bRaw);
+
+      // Keep blank/unrated values at the bottom in either direction.
+      if (aBlank && bBlank) return 0;
+      if (aBlank) return 1;
+      if (bBlank) return -1;
+
+      let comparison = 0;
+
+      if (type === "money") {
+        const aNum = moneyValue(aRaw);
+        const bNum = moneyValue(bRaw);
+        if (aNum === null && bNum === null) comparison = String(aRaw).localeCompare(String(bRaw), undefined, { sensitivity: "base", numeric: true });
+        else if (aNum === null) comparison = 1;
+        else if (bNum === null) comparison = -1;
+        else comparison = aNum - bNum;
+      } else if (type === "status") {
+        const order = { red: 1, yellow: 2, green: 3 };
+        comparison = (order[aRaw] ?? 99) - (order[bRaw] ?? 99);
+      } else {
+        comparison = String(aRaw).localeCompare(String(bRaw), undefined, { sensitivity: "base", numeric: true });
+      }
+
+      return direction === "desc" ? -comparison : comparison;
+    }
+
+    function sortPortfolio(field, type = "text") {
+      const direction = currentSort.field === field && currentSort.direction === "asc" ? "desc" : "asc";
+      currentSort = { field, direction };
+
+      portfolio = portfolio
+        .map((item, originalIndex) => ({ item, originalIndex }))
+        .sort((a, b) => {
+          const result = compareValues(a.item, b.item, field, type, direction);
+          return result || a.originalIndex - b.originalIndex;
+        })
+        .map(entry => entry.item);
+
+      render();
+      queueSave();
+    }
+
+    function updateSortIndicators() {
+      document.querySelectorAll(".sort-button").forEach(button => {
+        const active = button.dataset.sortField === currentSort.field;
+        button.classList.toggle("active", active);
+        const indicator = button.querySelector(".sort-indicator");
+        if (indicator) indicator.textContent = active ? (currentSort.direction === "asc" ? "▲" : "▼") : "↕";
+        button.setAttribute("aria-sort", active ? (currentSort.direction === "asc" ? "ascending" : "descending") : "none");
+      });
+    }
+
     function render() {
       const body = document.getElementById("portfolioBody");
       body.innerHTML = portfolio.map((item, index) => `
@@ -545,8 +651,8 @@
           <td>
             <textarea data-field="scope" aria-label="Scope" placeholder="What does this cover?">${escapeHTML(item.scope)}</textarea>
           </td>
-          <td class="status-cell">
-            <div class="status-box ${item.status ? `status-${item.status}` : ""}" data-status-box>
+          <td class="status-cell ${item.status ? `status-${item.status}` : ""}">
+            <div class="status-box" data-status-box>
               <div class="status-buttons" role="group" aria-label="Red yellow green assessment">
                 <button type="button" class="status-btn ${item.status === "red" ? "active" : ""}" data-status="red" aria-pressed="${item.status === "red"}">R</button>
                 <button type="button" class="status-btn ${item.status === "yellow" ? "active" : ""}" data-status="yellow" aria-pressed="${item.status === "yellow"}">Y</button>
@@ -576,6 +682,7 @@
         </tr>
       `).join("");
 
+      updateSortIndicators();
     }
 
     function queueSave() {
@@ -704,6 +811,12 @@
       link.remove();
       URL.revokeObjectURL(url);
     }
+
+    document.querySelector("thead").addEventListener("click", event => {
+      const button = event.target.closest(".sort-button");
+      if (!button) return;
+      sortPortfolio(button.dataset.sortField, button.dataset.sortType || "text");
+    });
 
     document.getElementById("portfolioBody").addEventListener("input", event => {
       if (event.target.matches("[data-field]")) updateField(event.target);
