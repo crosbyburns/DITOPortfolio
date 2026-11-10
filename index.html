@@ -193,18 +193,15 @@
       padding: 11px 7px;
       border-right: 1px solid rgba(255,255,255,0.13);
       vertical-align: bottom;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
 
-    thead th:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 7;
-    }
-
+    thead th:first-child,
     thead th:nth-child(2) {
       position: sticky;
-      left: 46px;
-      z-index: 6;
+      top: 0;
+      z-index: 4;
     }
 
     tbody td {
@@ -220,30 +217,23 @@
     tbody td:last-child, thead th:last-child { border-right: 0; }
 
     tbody td:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 3;
       background: #f4f8fb;
       text-align: center;
       padding: 0;
     }
 
     tbody td:nth-child(2) {
-      position: sticky;
-      left: 46px;
-      z-index: 2;
       background: #fbfdfe;
-      box-shadow: 5px 0 10px rgba(23, 59, 87, 0.04);
     }
 
     .col-drag { width: 2.5%; text-align: center; padding-left: 0; padding-right: 0; }
-    .col-resource { width: 11%; }
-    .col-investment { width: 7.5%; }
-    .col-scope { width: 13.5%; }
+    .col-resource { width: 12%; }
+    .col-investment { width: 8.5%; }
+    .col-scope { width: 13%; }
     .col-status { width: 7%; text-align: center; }
-    .col-assessment { width: 21%; }
-    .col-request { width: 8%; }
-    .col-description { width: 19%; }
+    .col-assessment { width: 20%; }
+    .col-request { width: 8.5%; }
+    .col-description { width: 18%; }
     .col-funding { width: 10.5%; }
 
     input[type="text"], textarea, select {
@@ -270,7 +260,15 @@
       box-shadow: 0 0 0 3px rgba(36, 107, 143, 0.14);
     }
 
-    .resource-input { font-weight: 750; color: var(--marin-navy); }
+    .resource-input {
+      font-weight: 750;
+      color: var(--marin-navy);
+      min-height: 78px;
+      resize: vertical;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
 
     .drag-handle {
       width: 100%;
@@ -393,7 +391,7 @@
       .table-scroll { overflow: visible; }
       table { min-width: 0; font-size: 9px; }
       thead th { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      tbody td:first-child, tbody td:nth-child(2) { position: static; box-shadow: none; }
+      tbody td:first-child, tbody td:nth-child(2) { box-shadow: none; }
       .drag-handle { display: none; }
       .col-drag { display: none; }
       .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -539,7 +537,7 @@
             <button class="drag-handle" type="button" draggable="true" aria-label="Drag to reorder ${escapeHTML(item.resource || `project ${index + 1}`)}" title="Drag to reorder">⠿</button>
           </td>
           <td>
-            <input class="resource-input" type="text" data-field="resource" value="${escapeHTML(item.resource)}" aria-label="Project" placeholder="Project name" />
+            <textarea class="resource-input" data-field="resource" aria-label="Project" placeholder="Project name">${escapeHTML(item.resource)}</textarea>
           </td>
           <td>
             <input type="text" data-field="investment" value="${escapeHTML(item.investment)}" aria-label="Investment" placeholder="$150K / 1.0 FTE" />
@@ -572,6 +570,7 @@
               <option value="TIB" ${item.fundingSource === "TIB" ? "selected" : ""}>TIB</option>
               <option value="Non-Departmental" ${item.fundingSource === "Non-Departmental" ? "selected" : ""}>Non-Departmental</option>
               <option value="CHB Budget" ${item.fundingSource === "CHB Budget" ? "selected" : ""}>CHB Budget</option>
+              <option value="N/A" ${item.fundingSource === "N/A" ? "selected" : ""}>N/A</option>
             </select>
           </td>
         </tr>
