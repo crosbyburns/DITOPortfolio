@@ -396,8 +396,257 @@
       text-align: center;
     }
 
+
+
+    .analytics-card {
+      margin-top: 24px;
+      background: var(--white);
+      border: 1px solid var(--marin-border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 24px 28px 26px;
+    }
+
+    .analytics-header {
+      margin-bottom: 20px;
+    }
+
+    .analytics-header h2 {
+      margin-bottom: 5px;
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .chart-panel,
+    .source-panel,
+    .slice-panel {
+      min-width: 0;
+    }
+
+    .chart-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 330px;
+    }
+
+    .request-chart {
+      width: 100%;
+    }
+
+    .donut-wrap {
+      width: min(100%, 340px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .donut-wrap svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .donut-track {
+      fill: none;
+      stroke: #e7eef2;
+      stroke-width: 42;
+    }
+
+    .donut-segment {
+      fill: none;
+      stroke-width: 42;
+      stroke-linecap: butt;
+      transition: opacity 0.15s ease, stroke-width 0.15s ease;
+    }
+
+    .donut-segment:hover {
+      opacity: 0.82;
+      stroke-width: 46;
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 29%;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .donut-center span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.045em;
+    }
+
+    .donut-center strong {
+      color: var(--marin-navy);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.12;
+      margin-top: 5px;
+    }
+
+    .donut-center small {
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .source-panel h3,
+    .slice-panel h3 {
+      color: var(--marin-navy);
+      font-size: 1rem;
+      margin: 0 0 10px;
+    }
+
+    .funding-summary {
+      border: 1px solid var(--marin-border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fbfdfe;
+    }
+
+    .funding-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 13px;
+      border-bottom: 1px solid var(--marin-border);
+    }
+
+    .funding-row:last-child {
+      border-bottom: 0;
+    }
+
+    .funding-row.total-row {
+      background: var(--marin-light);
+      font-weight: 800;
+      color: var(--marin-navy);
+    }
+
+    .funding-source-name {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 720;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      border: 1px solid rgba(31,45,54,0.10);
+    }
+
+    .funding-amount {
+      font-variant-numeric: tabular-nums;
+      font-weight: 780;
+      color: var(--marin-navy);
+      white-space: nowrap;
+    }
+
+    .funding-percent {
+      width: 54px;
+      text-align: right;
+      color: var(--muted);
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .slice-panel {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--marin-border);
+    }
+
+    .slice-legend {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+    }
+
+    .slice-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--marin-border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fbfdfe;
+    }
+
+    .slice-project {
+      min-width: 0;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .slice-project-text {
+      min-width: 0;
+    }
+
+    .slice-project-name {
+      font-weight: 760;
+      color: var(--marin-navy);
+      overflow-wrap: anywhere;
+    }
+
+    .slice-project-source {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 1px;
+      overflow-wrap: anywhere;
+    }
+
+    .slice-value {
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slice-value strong {
+      display: block;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .slice-value span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .analytics-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 38px 18px;
+      border: 1px dashed var(--marin-border);
+      border-radius: 10px;
+      background: #fbfdfe;
+    }
+
     @media (max-width: 1050px) {
       table { min-width: 1050px; }
+      .analytics-grid { grid-template-columns: 1fr; }
+      .chart-panel { min-height: 300px; }
     }
 
     @media (max-width: 920px) {
@@ -412,6 +661,9 @@
       .toolbar { align-items: stretch; }
       .toolbar-left, .toolbar-right { width: 100%; }
       .btn { flex: 1; }
+      .analytics-card { padding: 20px 18px; border-radius: 10px; }
+      .slice-legend { grid-template-columns: 1fr; }
+      .funding-row { gap: 8px; padding: 10px; }
     }
 
     @media print {
@@ -427,6 +679,8 @@
       .drag-handle { display: none; }
       .col-drag { display: none; }
       .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .analytics-card { box-shadow: none; break-inside: avoid; }
+      .donut-segment, .donut-track, .legend-dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       input[type="text"], textarea, select { border: 0; padding: 0; box-shadow: none; resize: none; }
       .status-buttons { display: none; }
     }
@@ -485,6 +739,29 @@
         </div>
       </section>
 
+
+
+      <section class="analytics-card" aria-labelledby="fundingChartTitle">
+        <div class="analytics-header">
+          <div class="section-kicker">Funding Overview</div>
+          <h2 id="fundingChartTitle">H1/27 Requested Funding</h2>
+          <p class="intro">Each pie slice is a project request. Funding-source totals show the combined dollar request and share of the overall H1/27 request.</p>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-panel">
+            <div class="request-chart" id="requestChart" aria-live="polite"></div>
+          </div>
+          <div class="source-panel">
+            <h3>Funding source totals</h3>
+            <div id="fundingSummary"></div>
+          </div>
+        </div>
+        <div class="slice-panel">
+          <h3>Project slices</h3>
+          <div class="slice-legend" id="sliceLegend"></div>
+        </div>
+      </section>
+
       <div class="empty-state-note">Tip: click any column header to sort; click again to reverse the order. Drag the dots at the left of a row for a custom order. All edits save automatically in this browser.</div>
       <div class="footer-note">Static portfolio review tool · Data is stored only in your browser unless you download the CSV.</div>
     </main>
@@ -534,6 +811,16 @@
     let draggedIndex = null;
     let currentSort = { field: null, direction: "asc" };
 
+    const FUNDING_SOURCES = ["TIB", "Non-Departmental", "CHB Budget", "KPMG implementation", "N/A"];
+    const SOURCE_STYLE = {
+      "TIB": { hue: 200, saturation: 58, base: "#246b8f" },
+      "Non-Departmental": { hue: 178, saturation: 45, base: "#2f7c7a" },
+      "CHB Budget": { hue: 38, saturation: 72, base: "#b47816" },
+      "KPMG implementation": { hue: 258, saturation: 35, base: "#6d5a9b" },
+      "N/A": { hue: 204, saturation: 9, base: "#75838c" },
+      "Unassigned": { hue: 5, saturation: 70, base: "#b42318" }
+    };
+
     function cloneSample() {
       return JSON.parse(JSON.stringify(SAMPLE_DATA));
     }
@@ -577,6 +864,150 @@
       if (suffix === "k") amount *= 1000;
       if (suffix === "m") amount *= 1000000;
       return amount;
+    }
+
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function formatPercent(value) {
+      if (!Number.isFinite(value)) return "0%";
+      return `${value.toFixed(value >= 10 ? 0 : 1)}%`;
+    }
+
+    function fundingSourceLabel(item) {
+      const value = String(item.fundingSource || "").trim();
+      return value || "Unassigned";
+    }
+
+    function sourceBaseColor(source) {
+      return (SOURCE_STYLE[source] || SOURCE_STYLE.Unassigned).base;
+    }
+
+    function sliceColor(source, indexWithinSource) {
+      const style = SOURCE_STYLE[source] || SOURCE_STYLE.Unassigned;
+      const lightnessSteps = [39, 50, 60, 69, 32, 56, 74, 44];
+      const lightness = lightnessSteps[indexWithinSource % lightnessSteps.length];
+      return `hsl(${style.hue} ${style.saturation}% ${lightness}%)`;
+    }
+
+    function getRequestSlices() {
+      const sourceCounts = {};
+      return portfolio.map((item, index) => {
+        const amount = moneyValue(item.request);
+        if (!(amount > 0)) return null;
+        const source = fundingSourceLabel(item);
+        const sourceIndex = sourceCounts[source] || 0;
+        sourceCounts[source] = sourceIndex + 1;
+        return {
+          project: String(item.resource || "").trim() || `Project ${index + 1}`,
+          amount,
+          source,
+          color: sliceColor(source, sourceIndex)
+        };
+      }).filter(Boolean);
+    }
+
+    function renderAnalytics() {
+      const chart = document.getElementById("requestChart");
+      const summary = document.getElementById("fundingSummary");
+      const legend = document.getElementById("sliceLegend");
+      if (!chart || !summary || !legend) return;
+
+      const slices = getRequestSlices();
+      const total = slices.reduce((sum, slice) => sum + slice.amount, 0);
+
+      if (!(total > 0)) {
+        chart.innerHTML = '<div class="analytics-empty">Enter H1/27 dollar requests to build the chart.</div>';
+        summary.innerHTML = '<div class="analytics-empty">Funding-source totals will appear here.</div>';
+        legend.innerHTML = '<div class="analytics-empty">Project slices will appear here.</div>';
+        return;
+      }
+
+      const radius = 78;
+      const circumference = 2 * Math.PI * radius;
+      let offset = 0;
+      const circles = slices.map(slice => {
+        const fraction = slice.amount / total;
+        const dash = fraction * circumference;
+        const circle = `
+          <circle class="donut-segment" cx="120" cy="120" r="${radius}"
+            stroke="${slice.color}"
+            stroke-dasharray="${dash} ${Math.max(0, circumference - dash)}"
+            stroke-dashoffset="${-offset}"
+            transform="rotate(-90 120 120)">
+            <title>${escapeHTML(slice.project)} — ${escapeHTML(slice.source)} — ${formatCurrency(slice.amount)} (${formatPercent(fraction * 100)})</title>
+          </circle>`;
+        offset += dash;
+        return circle;
+      }).join("");
+
+      chart.innerHTML = `
+        <div class="donut-wrap">
+          <svg viewBox="0 0 240 240" role="img" aria-labelledby="donutTitle donutDesc">
+            <title id="donutTitle">H1/27 requested funding by project</title>
+            <desc id="donutDesc">${slices.length} project request${slices.length === 1 ? "" : "s"} totaling ${formatCurrency(total)}.</desc>
+            <circle class="donut-track" cx="120" cy="120" r="${radius}"></circle>
+            ${circles}
+          </svg>
+          <div class="donut-center">
+            <span>Total requested</span>
+            <strong>${formatCurrency(total)}</strong>
+            <small>${slices.length} project${slices.length === 1 ? "" : "s"}</small>
+          </div>
+        </div>`;
+
+      const sourceTotals = {};
+      slices.forEach(slice => {
+        sourceTotals[slice.source] = (sourceTotals[slice.source] || 0) + slice.amount;
+      });
+
+      const extraSources = Object.keys(sourceTotals).filter(source => !FUNDING_SOURCES.includes(source));
+      const summarySources = [...FUNDING_SOURCES, ...extraSources];
+      summary.innerHTML = `
+        <div class="funding-summary">
+          ${summarySources.map(source => {
+            const amount = sourceTotals[source] || 0;
+            const percent = amount / total * 100;
+            return `
+              <div class="funding-row">
+                <div class="funding-source-name">
+                  <span class="legend-dot" style="background:${sourceBaseColor(source)}"></span>
+                  <span>${escapeHTML(source)}</span>
+                </div>
+                <div class="funding-amount">${formatCurrency(amount)}</div>
+                <div class="funding-percent">${formatPercent(percent)}</div>
+              </div>`;
+          }).join("")}
+          <div class="funding-row total-row">
+            <div class="funding-source-name"><span>Total H1/27 request</span></div>
+            <div class="funding-amount">${formatCurrency(total)}</div>
+            <div class="funding-percent">100%</div>
+          </div>
+        </div>`;
+
+      legend.innerHTML = slices.map(slice => {
+        const percent = slice.amount / total * 100;
+        return `
+          <div class="slice-row">
+            <div class="slice-project">
+              <span class="legend-dot" style="background:${slice.color}; margin-top:4px"></span>
+              <div class="slice-project-text">
+                <div class="slice-project-name">${escapeHTML(slice.project)}</div>
+                <div class="slice-project-source">${escapeHTML(slice.source)}</div>
+              </div>
+            </div>
+            <div class="slice-value">
+              <strong>${formatCurrency(slice.amount)}</strong>
+              <span>${formatPercent(percent)}</span>
+            </div>
+          </div>`;
+      }).join("");
     }
 
     function compareValues(a, b, field, type, direction) {
@@ -676,6 +1107,7 @@
               <option value="TIB" ${item.fundingSource === "TIB" ? "selected" : ""}>TIB</option>
               <option value="Non-Departmental" ${item.fundingSource === "Non-Departmental" ? "selected" : ""}>Non-Departmental</option>
               <option value="CHB Budget" ${item.fundingSource === "CHB Budget" ? "selected" : ""}>CHB Budget</option>
+              <option value="KPMG implementation" ${item.fundingSource === "KPMG implementation" ? "selected" : ""}>KPMG implementation</option>
               <option value="N/A" ${item.fundingSource === "N/A" ? "selected" : ""}>N/A</option>
             </select>
           </td>
@@ -683,6 +1115,7 @@
       `).join("");
 
       updateSortIndicators();
+      renderAnalytics();
     }
 
     function queueSave() {
@@ -702,6 +1135,7 @@
       const field = target.dataset.field;
       if (!field || !portfolio[index]) return;
       portfolio[index][field] = target.value;
+      renderAnalytics();
       queueSave();
     }
 
