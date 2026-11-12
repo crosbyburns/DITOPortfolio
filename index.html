@@ -224,7 +224,23 @@
       line-height: inherit;
     }
 
+    .sort-label { min-width: 0; }
+    .sort-label-stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+    .investment-subtitle {
+      color: #ff6b6b;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.05;
+      text-transform: none;
+    }
     .sort-button:hover .sort-label { text-decoration: underline; text-underline-offset: 2px; }
+    .sort-button:hover .investment-subtitle { text-decoration: none; }
     .sort-button:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; }
     .sort-indicator {
       flex: 0 0 auto;
@@ -645,6 +661,10 @@
       background: #fbfdfe;
     }
 
+    .print-table-card {
+      display: none;
+    }
+
     @media (max-width: 1050px) {
       table { min-width: 1050px; }
       .analytics-grid { grid-template-columns: 1fr; }
@@ -668,23 +688,168 @@
       .funding-row { gap: 8px; padding: 10px; }
     }
 
+    @page {
+      size: landscape;
+      margin: 0.32in;
+    }
+
     @media print {
-      body { background: white; }
-      header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .toolbar, .footer-note { display: none !important; }
-      main { max-width: none; padding: 12px; }
-      .intro-card, .table-card { box-shadow: none; }
-      .table-scroll { overflow: visible; }
-      table { min-width: 0; font-size: 9px; }
-      thead th { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      tbody td:first-child, tbody td:nth-child(2) { box-shadow: none; }
-      .drag-handle { display: none; }
-      .col-drag { display: none; }
-      .status-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .analytics-card { box-shadow: none; break-inside: avoid; }
-      .donut-segment, .donut-track, .legend-dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      input[type="text"], textarea, select { border: 0; padding: 0; box-shadow: none; resize: none; }
-      .status-buttons { display: none; }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      html, body {
+        background: #fff !important;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-size: 8pt;
+        line-height: 1.28;
+      }
+
+      header {
+        padding: 10px 14px;
+        border-bottom-width: 3px;
+      }
+
+      .header-inner {
+        max-width: none;
+      }
+
+      .brand-kicker { font-size: 6.8pt; }
+      h1 { font-size: 15pt; }
+      .header-subtitle { font-size: 8pt; }
+
+      main {
+        max-width: none;
+        padding: 8px 0 0;
+      }
+
+      .intro-card {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        box-shadow: none;
+      }
+
+      .intro-card .section-kicker { font-size: 6.8pt; }
+      .intro-card h2 { font-size: 13pt; margin-bottom: 2px; }
+      .intro-card .intro { font-size: 7.5pt; margin: 0; }
+
+      .toolbar,
+      .table-card,
+      .empty-state-note,
+      .footer-note {
+        display: none !important;
+      }
+
+      .print-table-card {
+        display: block !important;
+        border: 1px solid #bfcdd6;
+        border-radius: 0;
+        overflow: visible;
+        box-shadow: none;
+      }
+
+      .print-portfolio-table {
+        width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        font-size: 7.4pt !important;
+        line-height: 1.25;
+      }
+
+      .print-portfolio-table thead {
+        display: table-header-group;
+      }
+
+      .print-portfolio-table th {
+        position: static !important;
+        background: var(--marin-navy) !important;
+        color: #fff !important;
+        padding: 5px 5px !important;
+        border: 1px solid #46647a !important;
+        vertical-align: bottom;
+        text-align: left;
+        text-transform: uppercase;
+        font-size: 6.7pt !important;
+        line-height: 1.12;
+        letter-spacing: 0.02em;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+      }
+
+      .print-portfolio-table td {
+        background: #fff !important;
+        color: #1f2d36 !important;
+        padding: 5px 5px !important;
+        border: 1px solid #c9d6de !important;
+        vertical-align: top !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+        word-break: normal;
+      }
+
+      .print-portfolio-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .print-portfolio-table .p-project { width: 12%; font-weight: 700; }
+      .print-portfolio-table .p-investment { width: 8.5%; }
+      .print-portfolio-table .p-scope { width: 13%; }
+      .print-portfolio-table .p-status { width: 7%; text-align: center !important; vertical-align: middle !important; font-weight: 800; }
+      .print-portfolio-table .p-assessment { width: 20%; }
+      .print-portfolio-table .p-request { width: 8.5%; }
+      .print-portfolio-table .p-description { width: 18%; }
+      .print-portfolio-table .p-funding { width: 10.5%; }
+
+      .print-portfolio-table td.p-status.status-red {
+        background: #fde8e7 !important;
+        color: #b42318 !important;
+      }
+
+      .print-portfolio-table td.p-status.status-yellow {
+        background: #fff3c4 !important;
+        color: #7a5700 !important;
+      }
+
+      .print-portfolio-table td.p-status.status-green {
+        background: #dff1e5 !important;
+        color: #0f6b38 !important;
+      }
+
+      .print-investment-subtitle {
+        display: block;
+        margin-top: 1px;
+        color: #ff6b6b !important;
+        font-size: 5.8pt;
+        font-weight: 800;
+        text-transform: none;
+      }
+
+      .analytics-card {
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 6px;
+        box-shadow: none;
+        break-before: auto;
+        break-inside: avoid;
+      }
+
+      .analytics-card h2 { font-size: 13pt; }
+      .analytics-card h3 { font-size: 9pt; }
+      .analytics-card .intro { font-size: 7.3pt; }
+      .analytics-grid { gap: 10px; }
+      .chart-panel { min-height: 220px; }
+      .donut-chart { width: 190px; height: 190px; }
+      .slice-legend { gap: 6px 10px; }
+      .funding-row { padding: 6px; }
     }
   </style>
 </head>
@@ -727,7 +892,7 @@
               <tr>
                 <th class="col-drag" aria-label="Reorder"></th>
                 <th class="col-resource"><button class="sort-button" type="button" data-sort-field="resource" aria-label="Sort by Project"><span class="sort-label">Project</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
-                <th class="col-investment"><button class="sort-button" type="button" data-sort-field="investment" data-sort-type="money" aria-label="Sort by Investment"><span class="sort-label">Investment</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
+                <th class="col-investment"><button class="sort-button" type="button" data-sort-field="investment" data-sort-type="money" aria-label="Sort by Investment to date"><span class="sort-label sort-label-stacked"><span>Investment</span><span class="investment-subtitle">To date</span></span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
                 <th class="col-scope"><button class="sort-button" type="button" data-sort-field="scope" aria-label="Sort by Scope"><span class="sort-label">Scope</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
                 <th class="col-status"><button class="sort-button" type="button" data-sort-field="status" data-sort-type="status" aria-label="Sort by R Y G status"><span class="sort-label">R / Y / G</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
                 <th class="col-assessment"><button class="sort-button" type="button" data-sort-field="assessment" aria-label="Sort by Assessment"><span class="sort-label">Assessment</span><span class="sort-indicator" aria-hidden="true">↕</span></button></th>
@@ -741,7 +906,23 @@
         </div>
       </section>
 
-
+      <section class="print-table-card" id="printPortfolioSection" aria-hidden="true">
+        <table class="print-portfolio-table" aria-label="Portfolio review print table">
+          <thead>
+            <tr>
+              <th class="p-project">Project</th>
+              <th class="p-investment">Investment<span class="print-investment-subtitle">To date</span></th>
+              <th class="p-scope">Scope</th>
+              <th class="p-status">R / Y / G</th>
+              <th class="p-assessment">Assessment</th>
+              <th class="p-request">H1/27 $ Request</th>
+              <th class="p-description">Description</th>
+              <th class="p-funding">Funding Source?</th>
+            </tr>
+          </thead>
+          <tbody id="printPortfolioBody"></tbody>
+        </table>
+      </section>
 
       <section class="analytics-card" aria-labelledby="fundingChartTitle">
         <div class="analytics-header">
@@ -1128,8 +1309,33 @@
 
       updateSortIndicators();
       renderAnalytics();
+      renderPrintTable();
       requestAnimationFrame(autoSizeAllTextareas);
     }
+
+    function renderPrintTable() {
+      const printBody = document.getElementById("printPortfolioBody");
+      if (!printBody) return;
+
+      printBody.innerHTML = portfolio.map(item => {
+        const status = item.status || "";
+        const statusClass = status ? `status-${status}` : "";
+        return `
+          <tr>
+            <td class="p-project">${escapeHTML(item.resource || "")}</td>
+            <td class="p-investment">${escapeHTML(item.investment || "")}</td>
+            <td class="p-scope">${escapeHTML(item.scope || "")}</td>
+            <td class="p-status ${statusClass}">${escapeHTML(statusLabel(status) || "—")}</td>
+            <td class="p-assessment">${escapeHTML(item.assessment || "")}</td>
+            <td class="p-request">${escapeHTML(item.request || "")}</td>
+            <td class="p-description">${escapeHTML(item.description || "")}</td>
+            <td class="p-funding">${escapeHTML(item.fundingSource || "")}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    window.addEventListener("beforeprint", renderPrintTable);
 
     function queueSave() {
       const indicator = document.getElementById("saveStatus");
